@@ -38,6 +38,7 @@
 #include <mutex>   
 // Ros includes
 #include <ros/ros.h>
+#include <std_msgs/UInt64.h>
 #include <dynamic_reconfigure/server.h>
 // SDK includes
 #include <SeekerSDKClient.h>
@@ -103,6 +104,7 @@ namespace mocap_nokov
   class NokovRosBridge
   {
   public:
+
     NokovRosBridge(
       ros::NodeHandle &nh,
       ServerDescription const& serverDescr, 
@@ -145,7 +147,7 @@ namespace mocap_nokov
           ver, publisherConfigurations));
         
       ROS_INFO("Initialization complete");
-
+      frame_pub=nh.advertise<std_msgs::UInt64>("current_frame_number",10);
       initialized = true;
     };
 
@@ -158,11 +160,13 @@ namespace mocap_nokov
           static int preIFrame = 0;
 
           const auto frame = GetCurrentFrame();
-
+          
           if (frame.frameNumber != preIFrame)
           {
             preIFrame = frame.frameNumber ;
 
+            frame_msg.data=preIFrame;
+            frame_pub.publish(frame_msg);
             const ros::Time time = ros::Time::now();
 
             publishDispatcherPtr->publish(time, frame.dataFrame.rigidBodies);
@@ -186,6 +190,8 @@ namespace mocap_nokov
     std::unique_ptr<RigidBodyPublishDispatcher> publishDispatcherPtr;
     std::unique_ptr<SeekerSDKClient> sdkClientPtr;
     dynamic_reconfigure::Server<MocapNokovConfig> server;
+    ros::Publisher frame_pub;
+    std_msgs::UInt64 frame_msg;
   };
 
 } // namespace

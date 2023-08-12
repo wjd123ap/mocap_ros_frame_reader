@@ -19,6 +19,7 @@ set (nokov_sdk_LIB_DIRS deps/nokov_sdk/lib)
 
 find_package(catkin REQUIRED COMPONENTS 
   roscpp
+  std_msgs
   geometry_msgs
   nav_msgs
   dynamic_reconfigure
@@ -45,7 +46,7 @@ generate_dynamic_reconfigure_options(
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp std_msgs
   dynamic_reconfigure
 )
 
