@@ -63,7 +63,7 @@ namespace mocap_nokov
       frameObjData.dataFrame.rigidBodies.resize(pFrameOfData->nRigidBodies);
       frameObjData.dataFrame.otherMarkers.resize(pFrameOfData->nOtherMarkers);
       frameObjData.dataFrame.latency = pFrameOfData->fLatency;
-      
+      /*
       for(int i = 0; i< nmaker; ++i)
       {   
         frameObjData.dataFrame.otherMarkers.push_back(
@@ -89,6 +89,7 @@ namespace mocap_nokov
 
           frameObjData.dataFrame.rigidBodies.push_back(body);
       }
+    */
   }
 
   const DataModel& GetCurrentFrame()
@@ -169,7 +170,7 @@ namespace mocap_nokov
             frame_pub.publish(frame_msg);
             const ros::Time time = ros::Time::now();
 
-            publishDispatcherPtr->publish(time, frame.dataFrame.rigidBodies);
+           // publishDispatcherPtr->publish(time, frame.dataFrame.rigidBodies);
           }
 
           usleep(100);
