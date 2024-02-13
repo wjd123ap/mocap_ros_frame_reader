@@ -34,6 +34,7 @@
 #include <mocap_nokov/MocapNokovConfig.h>
 #include <mocap_nokov/data_model.h>
 #include <mocap_nokov/rigid_body_publisher.h>
+#include <mocap_nokov/Frame.h>
 // STL includes
 #include <mutex>   
 // Ros includes
@@ -148,7 +149,7 @@ namespace mocap_nokov
           ver, publisherConfigurations));
         
       ROS_INFO("Initialization complete");
-      frame_pub=nh.advertise<std_msgs::UInt64>("current_frame_number",10);
+      frame_pub=nh.advertise<mocap_nokov::Frame>("current_frame_number",10);
       initialized = true;
     };
 
@@ -165,10 +166,11 @@ namespace mocap_nokov
           if (frame.frameNumber != preIFrame)
           {
             preIFrame = frame.frameNumber ;
-
-            frame_msg.data=preIFrame;
-            frame_pub.publish(frame_msg);
             const ros::Time time = ros::Time::now();
+            frame_msg.header.stamp = time; //frame_time
+            frame_msg.number = preIFrame; //frame_number
+            frame_pub.publish(frame_msg);
+            
 
            // publishDispatcherPtr->publish(time, frame.dataFrame.rigidBodies);
           }
@@ -192,7 +194,7 @@ namespace mocap_nokov
     std::unique_ptr<SeekerSDKClient> sdkClientPtr;
     dynamic_reconfigure::Server<MocapNokovConfig> server;
     ros::Publisher frame_pub;
-    std_msgs::UInt64 frame_msg;
+    mocap_nokov::Frame frame_msg;
   };
 
 } // namespace

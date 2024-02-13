@@ -22,10 +22,19 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   nav_msgs
+  message_generation
   dynamic_reconfigure
   tf
 )
+add_message_files(
+  FILES
+  Frame.msg
 
+)
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 message( STATUS "Architecture: ${ARCHITECTURE}" )
 
